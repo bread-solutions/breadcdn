@@ -1,0 +1,19 @@
+{
+  "name": "breadcdn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NotARacc/breadcdn.git"
+  },
+  "author": "Kyler Gonzales, Bread Clique",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NotARacc/breadcdn/issues"
+  },
+  "homepage": "https://github.com/NotARacc/breadcdn#readme"
+}
