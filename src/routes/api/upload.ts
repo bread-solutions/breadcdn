@@ -1,21 +1,31 @@
 import { Router, Request, Response } from "express";
 import { canUpload } from "../../utils/routeFunctions";
-import { formidable } from "formidable";
+import { formidable } from 'formidable';
+import { getNextUploadId, getUser, insertUpload } from "../../db";
 export const uploadRoute = Router();
 
-uploadRoute.post("/", canUpload, (req: Request, res: Response) => {
-  formidable({
-    uploadDir: "storage",
-    keepExtensions: true,
-    allowEmptyFiles: false,
-  }).parse(req, (err, fields, files) => {
-    if (err) {
-      res.writeHead(err.httpCode || 400, { "Content-Type": "text/plain" });
-      res.end(String(err));
-      return;
+uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
+  const user = await getUser({ authToken: req.query["token"] as string }).catch(() => null);
+  const isPrivate = req.query["private"] as string !== "true";
+  if(user === null) return res.status(401).send("Invalid token");
+  formidable({uploadDir: 'storage', keepExtensions: true, allowEmptyFiles: false, }).parse(req, async (err, _fields, files) => {
+    if(err) {
+      res.writeHead(err.httpCode || 400, { 'Content-Type': 'text/plain' });
+        res.end(String(err));
+        return;
     }
-    console.log(files.file);
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ fields, files }, null, 2));
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    const upload = await insertUpload({
+      name: files.file instanceof Array? files.file[0].newFilename : files.file.newFilename,
+      uploadId: await getNextUploadId(),
+      uploadedBy: user,
+      uploadedOn: new Date(),
+      isPublic: isPrivate,
+      url: "https://bread.supply/" + (user.folderName === "/"? "" : user.folderName) + (user.folderName === "/"? "" : "/") + (files.file instanceof Array? files.file[0].newFilename : files.file.newFilename),
+    });
+    res.end(JSON.stringify({
+      url: upload.url,
+      delete_url: "https://bread.supply/api/delete/" + upload.uploadId + "?token=" + user.authToken,
+   }));
   });
 });

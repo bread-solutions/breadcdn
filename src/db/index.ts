@@ -85,3 +85,15 @@ export async function modfyUpload(upload: Partial<IUpload>, updatedUpload: Parti
     dbConnection.close();
     return Promise.resolve();
 }
+
+export async function getNextUploadId(): Promise<number> {
+    const dbConnection = await dbClient.connect();
+    const collection = dbConnection.db(config.database.name).collection('uploads');
+    const result = await collection.find({}).sort({uploadId: -1}).limit(1).toArray();
+    dbConnection.close();
+    if(result.length === 0) {
+        return Promise.resolve(1);
+    } else {
+        return Promise.resolve(result[0].uploadId + 1);
+    }
+}
