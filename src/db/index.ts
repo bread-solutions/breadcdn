@@ -81,7 +81,7 @@ export async function insertUpload(upload: IUpload): Promise<IUpload> {
     .db(config.database.name)
     .collection("uploads");
   await collection.insertOne(upload);
-  dbConnection.close();
+  dbClient.close();
   return Promise.resolve(upload);
 }
 
