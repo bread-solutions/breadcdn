@@ -43,7 +43,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
         url: upload.url,
         delete_url:
           "https://bread.supply/api/delete/" +
-          upload.uploadId +
+          upload.uploadId as string +
           "?token=" +
           user.authToken,
       })
