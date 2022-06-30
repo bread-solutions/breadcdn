@@ -31,18 +31,21 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
       uploadedOn: new Date(),
       isPublic: isPrivate,
       url:
-        "https://bread.supply/" +
+        "http://localhost:18133/" +
         (user.folderName === "/" ? "" : user.folderName) +
         (user.folderName === "/" ? "" : "/") +
         (files.file instanceof Array
           ? files.file[0].newFilename
           : files.file.newFilename),
+          filename: (files.file instanceof Array
+            ? files.file[0].newFilename
+            : files.file.newFilename)
     });
     res.end(
       JSON.stringify({
         url: upload.url,
         delete_url:
-          "https://bread.supply/api/delete/" +
+          "http://localhost:18133/api/delete/" +
           upload.uploadId as string +
           "?token=" +
           user.authToken,
