@@ -13,14 +13,16 @@ export async function canUpload(
   next();
 }
 
-export async function isSameUser(req: Request, res:Response, next:NextFunction) {
+export async function isSameUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const token = req.query["token"] as string;
-  if(!token) {
+  if (!token) {
     return res.status(401).send("No token provided");
-}
+  }
   const userFromToken = await getUser({ authToken: token }).catch(() => null);
   if (!userFromToken) return res.status(401).send("Invalid token");
   next();
-  
 }
-
