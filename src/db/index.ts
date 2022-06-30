@@ -104,6 +104,29 @@ export async function modfyUpload(
   return Promise.resolve();
 }
 
+export async function getUpload(upload: Partial<IUpload>): Promise<IUpload> {
+  const dbConnection = await dbClient.connect();
+  const collection = dbConnection
+    .db(config.database.name)
+    .collection("uploads");
+  const result = await collection.findOne(upload);
+  dbConnection.close();
+  if (result && "uploadId" in result) {
+    return Promise.resolve(result as unknown as IUpload);
+  } else {
+    return Promise.reject("Upload not found");
+  }
+}
+
+export async function deleteUpload(upload: Partial<IUpload>): Promise<void> {
+  const dbConnection = await dbClient.connect();
+  const collection = dbConnection
+    .db(config.database.name)
+    .collection("uploads");
+  await collection.deleteOne(upload);
+  dbConnection.close();
+}
+
 export async function getNextUploadId(): Promise<number> {
   const dbConnection = await dbClient.connect();
   const collection = dbConnection

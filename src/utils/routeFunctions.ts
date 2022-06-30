@@ -13,15 +13,14 @@ export async function canUpload(
   next();
 }
 
-export async function checkPhoto(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  console.log("running");
-  if (req.url.match(new RegExp("^.+\\."))) {
-    return res
-      .status(200)
-      .sendFile(req.url.substring(1), { root: "./storage" });
-  } else next();
+export async function isSameUser(req: Request, res:Response, next:NextFunction) {
+  const token = req.query["token"] as string;
+  if(!token) {
+    return res.status(401).send("No token provided");
 }
+  const userFromToken = await getUser({ authToken: token }).catch(() => null);
+  if (!userFromToken) return res.status(401).send("Invalid token");
+  next();
+  
+}
+

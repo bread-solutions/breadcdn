@@ -7,4 +7,5 @@ uploadedOn: Date;
 isPublic: boolean;
 name: string;
 url: string;
+filename: string;
 }
