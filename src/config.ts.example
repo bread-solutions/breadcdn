@@ -1,0 +1,12 @@
+const config = {
+    debug: false,
+    port: process.env.PORT || 18133,
+    database: {
+        host: process.env.DB_HOST || 'host',
+        port: process.env.DB_PORT || 27017,
+        name: process.env.DB_NAME || 'dbname',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || 'password'
+    },
+}
+export default config;
