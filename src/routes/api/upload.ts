@@ -37,16 +37,16 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
         (files.file instanceof Array
           ? files.file[0].newFilename
           : files.file.newFilename),
-          filename: (files.file instanceof Array
-            ? files.file[0].newFilename
-            : files.file.newFilename)
+      filename:
+        files.file instanceof Array
+          ? files.file[0].newFilename
+          : files.file.newFilename,
     });
     res.end(
       JSON.stringify({
         url: upload.url,
         delete_url:
-          "http://localhost:18133/api/delete/" +
-          upload.uploadId as string +
+          (("http://localhost:18133/api/delete/" + upload.uploadId) as string) +
           "?token=" +
           user.authToken,
       })
