@@ -9,4 +9,3 @@ expressApp.all("/", (_req, res) => {return res.redirect("https://discord.gg/Jckp
 expressApp.listen(18133, () => {
   console.log("Server started on port 18133");
 });
-// test
