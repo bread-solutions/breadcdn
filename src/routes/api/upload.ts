@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { canUpload } from "../../utils/routeFunctions";
 import { formidable } from "formidable";
 import { getNextUploadId, getUser, insertUpload } from "../../db";
+import { join } from 'path';
 export const uploadRoute = Router();
 
 uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
@@ -11,7 +12,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
   const isPrivate = (req.query["private"] as string) !== "true";
   if (user === null) return res.status(401).send("Invalid token");
   formidable({
-    uploadDir: "storage",
+    uploadDir:  join(__dirname, "../../../storage"),
     keepExtensions: true,
     allowEmptyFiles: false,
   }).parse(req, async (err, _fields, files) => {

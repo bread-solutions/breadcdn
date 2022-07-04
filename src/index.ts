@@ -1,7 +1,8 @@
 import express from "express";
+import { join } from "path";
 import { defaultRoute } from "./routes";
 const expressApp = express();
-expressApp.use(express.static("storage"));
+expressApp.use(express.static(join(__dirname, "../storage")));
 expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
 expressApp.use("/", defaultRoute);
