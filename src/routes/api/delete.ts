@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { deleteUpload, getUpload } from "../../db";
 import { isSameUser } from "../../utils/routeFunctions";
 import { unlinkSync } from "fs";
+import { join } from "path";
 export const deleteRoute = Router();
 
 deleteRoute.get(
@@ -19,7 +20,7 @@ deleteRoute.get(
     if (!photoOwner) return res.status(404).send("Photo not found");
     try {
       unlinkSync(
-        `storage/${
+        `${join(__dirname, "../../../storage")}/${
           photoOwner.folderName + photoOwner.folderName === "/" ? "" : "/"
         }${photoUpload.filename}`
       );
