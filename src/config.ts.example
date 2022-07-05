@@ -8,5 +8,7 @@ const config = {
         user: process.env.DB_USER || 'root',
         password: process.env.DB_PASSWORD || 'password'
     },
+    fqdn: process.env.FQDN || 'bread.supply',
+    ssl: true
 }
 export default config;
