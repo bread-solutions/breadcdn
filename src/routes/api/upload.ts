@@ -3,6 +3,7 @@ import { canUpload } from "../../utils/routeFunctions";
 import { formidable } from "formidable";
 import { getNextUploadId, getUser, insertUpload } from "../../db";
 import { join } from 'path';
+import config from "../../config";
 export const uploadRoute = Router();
 
 uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
@@ -32,7 +33,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
       uploadedOn: new Date(),
       isPublic: isPrivate,
       url:
-        "https://bread.supply/" +
+        config.ssl? "https://" : "http://" + config.fqdn +
         (user.folderName === "/" ? "" : user.folderName) +
         (user.folderName === "/" ? "" : "/") +
         (files.file instanceof Array
@@ -47,7 +48,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
       JSON.stringify({
         url: upload.url,
         delete_url:
-          (("https://bread.supply/api/delete/" + upload.uploadId) as string) +
+          ((config.ssl? "https://" : "http://" + config.fqdn + "/api/delete/" + upload.uploadId) as string) +
           "?token=" +
           user.authToken,
       })
