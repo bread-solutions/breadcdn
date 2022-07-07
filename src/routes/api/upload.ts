@@ -33,10 +33,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
       uploadedBy: user,
       uploadedOn: new Date(),
       isPublic: isPrivate,
-      url: config.ssl
-        ? "https://"
-        : "http://" +
-          config.fqdn +
+      url: config.ssl? "https://": "http://" + config.fqdn + 
           (user.folderName === "/" ? "" : user.folderName) +
           (user.folderName === "/" ? "" : "/") +
           (files.file instanceof Array
