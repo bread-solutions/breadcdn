@@ -42,7 +42,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
       JSON.stringify({
         url: upload.url,
         delete_url:
-          ((config.ssl? "https://": "http://" + config.fqdn + "/api/delete/" + upload.uploadId) as string) + "?token=" + user.authToken,
+          (((config.ssl? "https://": "http://") + config.fqdn + "/api/delete/" + upload.uploadId) as string) + "?token=" + user.authToken,
       })
     );
   });
