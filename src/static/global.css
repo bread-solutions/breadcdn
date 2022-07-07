@@ -1,0 +1,30 @@
+body {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  background-color: #1d1d1d;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.container > #logo-img {
+  order: 1;
+  margin-left: 100px;
+  margin-top: 40px;
+  width: 124px;
+  height: 124px;
+}
+
+.container > #logo-text {
+  order: 2;
+  padding-top: 30px;
+  font-family: Segoe UI;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 72px;
+  color: #fff;
+}
