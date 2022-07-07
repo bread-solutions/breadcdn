@@ -16,7 +16,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
   if (req.headers["content-type"] === "text/html") {
     const html = req.body;
     const fileName = `${Math.random().toString(36).substring(2, 15)}.html`;
-    writeFileSync(join(__dirname, "../../storage", fileName), html);
+    writeFileSync(join(__dirname, "../../storage", fileName), html as string);
     res.writeHead(200, { "Content-Type": "application/json" });
     const upload = await insertUpload({
       name: fileName,
