@@ -9,6 +9,10 @@ const config = {
         password: process.env.DB_PASSWORD || 'password'
     },
     fqdn: process.env.FQDN || 'bread.supply',
-    ssl: true
+    ssl: true,
+    discord: {
+        client_id: process.env.DISCORD_CLIENT_ID || '',
+        client_secret: process.env.DISCORD_CLIENT_SECRET || '',
+    }
 }
 export default config;

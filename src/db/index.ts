@@ -155,6 +155,24 @@ export async function getNextUploadId(): Promise<number> {
   }
 }
 
+export async function getNextUserId(): Promise<number> {
+  const dbConnection = await dbClient.connect();
+  const collection = dbConnection
+    .db(config.database.name)
+    .collection("users");
+  const result = await collection
+    .find({})
+    .sort({ userId: -1 })
+    .limit(1)
+    .toArray();
+  dbConnection.close();
+  if (result.length === 0) {
+    return Promise.resolve(1);
+  } else {
+    return Promise.resolve(result[0].userId + 1);
+  }
+}
+
 /**
  * @summary Inserts a token into the database
  * @param user The user to create the token for
