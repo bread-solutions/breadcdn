@@ -32,7 +32,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
       uploadedBy: user,
       uploadedOn: new Date(),
       isPublic: isPrivate,
-      url: (config.ssl? "https://": "http://") + config.fqdn + (user.folderName === "/" ? "" : user.folderName) + (user.folderName === "/" ? "" : "/") + (files.file instanceof Array? files.file[0].newFilename: files.file.newFilename),
+      url: (config.ssl? "https://": "http://") + config.fqdn + "/" + (user.folderName === "/" ? "" : user.folderName) + (user.folderName === "/" ? "" : "/") + (files.file instanceof Array? files.file[0].newFilename: files.file.newFilename),
       filename:
         files.file instanceof Array
           ? files.file[0].newFilename
@@ -42,7 +42,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
       JSON.stringify({
         url: upload.url,
         delete_url:
-          (((config.ssl? "https://": "http://") + config.fqdn + "/api/delete/" + upload.uploadId) as string) + "?token=" + user.authToken,
+          (((config.ssl? "https://": "http://") + config.fqdn + "/" + "/api/delete/" + upload.uploadId) as string) + "?token=" + user.authToken,
       })
     );
   });
