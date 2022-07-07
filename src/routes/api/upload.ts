@@ -13,16 +13,22 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
   );
   const isPrivate = (req.query["private"] as string) !== "true";
   if (user === null) return res.status(401).send("Invalid token");
-  if (req.headers["content-type"] === "text/html") {
-    const html: string = req.body;
-    console.log(formidable().parse(req, (err, _fields, files) => {
-      console.log(files);
-    }));
-    const fileName = `${Math.random().toString(36).substring(2, 15)}.html`;
-    writeFileSync(join(__dirname, "../../storage", fileName), Buffer.from(html));
+  formidable({
+    uploadDir: join(__dirname, "../../../storage"),
+    keepExtensions: true,
+    allowEmptyFiles: false,
+  }).parse(req, async (err, _fields, files) => {
+    if (err) {
+      res.writeHead(err.httpCode || 400, { "Content-Type": "text/plain" });
+      res.end(String(err));
+      return;
+    }
     res.writeHead(200, { "Content-Type": "application/json" });
     const upload = await insertUpload({
-      name: fileName,
+      name:
+        files.file instanceof Array
+          ? files.file[0].newFilename
+          : files.file.newFilename,
       uploadId: await getNextUploadId(),
       uploadedBy: user,
       uploadedOn: new Date(),
@@ -33,8 +39,13 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
           config.fqdn +
           (user.folderName === "/" ? "" : user.folderName) +
           (user.folderName === "/" ? "" : "/") +
-          fileName,
-      filename: fileName,
+          (files.file instanceof Array
+            ? files.file[0].newFilename
+            : files.file.newFilename),
+      filename:
+        files.file instanceof Array
+          ? files.file[0].newFilename
+          : files.file.newFilename,
     });
 
     res.end(
@@ -51,56 +62,5 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
           user.authToken,
       })
     );
-  } else {
-    formidable({
-      uploadDir: join(__dirname, "../../../storage"),
-      keepExtensions: true,
-      allowEmptyFiles: false,
-    }).parse(req, async (err, _fields, files) => {
-      if (err) {
-        res.writeHead(err.httpCode || 400, { "Content-Type": "text/plain" });
-        res.end(String(err));
-        return;
-      }
-      res.writeHead(200, { "Content-Type": "application/json" });
-      const upload = await insertUpload({
-        name:
-          files.file instanceof Array
-            ? files.file[0].newFilename
-            : files.file.newFilename,
-        uploadId: await getNextUploadId(),
-        uploadedBy: user,
-        uploadedOn: new Date(),
-        isPublic: isPrivate,
-        url: config.ssl
-          ? "https://"
-          : "http://" +
-            config.fqdn +
-            (user.folderName === "/" ? "" : user.folderName) +
-            (user.folderName === "/" ? "" : "/") +
-            (files.file instanceof Array
-              ? files.file[0].newFilename
-              : files.file.newFilename),
-        filename:
-          files.file instanceof Array
-            ? files.file[0].newFilename
-            : files.file.newFilename,
-      });
-
-      res.end(
-        JSON.stringify({
-          url: upload.url,
-          delete_url:
-            ((config.ssl
-              ? "https://"
-              : "http://" +
-                config.fqdn +
-                "/api/delete/" +
-                upload.uploadId) as string) +
-            "?token=" +
-            user.authToken,
-        })
-      );
-    });
-  }
+  });
 });
