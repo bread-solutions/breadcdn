@@ -3,7 +3,6 @@ import { canUpload } from "../../utils/routeFunctions";
 import { formidable } from "formidable";
 import { getNextUploadId, getUser, insertUpload } from "../../db";
 import { join } from "path";
-import { writeFileSync } from "fs";
 import config from "../../config";
 export const uploadRoute = Router();
 
@@ -49,14 +48,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
       JSON.stringify({
         url: upload.url,
         delete_url:
-          ((config.ssl
-            ? "https://"
-            : "http://" +
-              config.fqdn +
-              "/api/delete/" +
-              upload.uploadId) as string) +
-          "?token=" +
-          user.authToken,
+          ((config.ssl? "https://": "http://" +config.fqdn +"/api/delete/" + upload.uploadId) as string) + "?token=" + user.authToken,
       })
     );
   });
