@@ -15,6 +15,7 @@ uploadRoute.post("/", canUpload, async (req: Request, res: Response) => {
   if (user === null) return res.status(401).send("Invalid token");
   if (req.headers["content-type"] === "text/html") {
     const html = req.body;
+    console.log(html);
     const fileName = `${Math.random().toString(36).substring(2, 15)}.html`;
     writeFileSync(join(__dirname, "../../storage", fileName), html as string);
     res.writeHead(200, { "Content-Type": "application/json" });
