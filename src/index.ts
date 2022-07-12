@@ -7,11 +7,8 @@ expressApp.use('/static', express.static(join(__dirname, "./static")));
 expressApp.use(express.static(join(__dirname, "../storage")));
 expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
-expressApp.set("views", join(__dirname, "views"));
-expressApp.set('view engine', 'ejs');
 expressApp.use("/", defaultRoute);
-expressApp.get("/", (_req: Request, res: Response) => {res.render("index")});
-expressApp.all("/discord", (_req, res) => {return res.redirect("https://discord.gg/JckpxefJzu")});
+expressApp.all("/discord", (_req, res) => {return res.redirect("https://discord.gg/breadsln")});
 expressApp.listen(config.port, () => {
   console.log("Server started on port " + config.port);
 });
