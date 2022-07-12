@@ -1,4 +1,5 @@
 const config = {
+    dev: true
     debug: false,
     port: process.env.PORT || 18133,
     database: {
